@@ -75,20 +75,41 @@ public class newsEngine {
             __result.setImage(result.getString("image"));
             __result.setDescription(result.getString("description"));
 
+            log.info(" - " + operation_ID + " - **** newsEngine.class|readNews|Stop");
+
             return __result;
         }
+
+        log.info(" - " + operation_ID + " - **** newsEngine.class|readNews|Stop");
 
         return null;
     }
 
-    public void updateNews(NewsModel news){
+    public void updateNews(String id, NewsModel news){
         log.info(" - " + operation_ID + " - **** newsEngine.class|updateNews|Start");
 
         connectIfDisconnected();
 
         Document newsDocument = news.toDocument();
 
+        if (MongoDBManager.getInstance().getOneDocumentFromCollectionWithID(id, "News") != null) {
+            MongoDBManager.getInstance().updateOneDocumentInACollectionWithID(id, newsDocument, "News");
+        } else {
+            System.out.println("Non è possibile eseguire l'update perché l'elemento non è presente all'interno del database");
+            log.info(" - " + operation_ID + " - **** newsEngine.class|updateNews|Stop");
+        }
+    }
 
+    public void deleteNews(String id){
+        log.info(" - " + operation_ID + " - **** newsEngine.class|deleteNews|Start");
+
+        connectIfDisconnected();
+
+        if (MongoDBManager.getInstance().getOneDocumentFromCollectionWithID(id, "News") != null){
+            MongoDBManager.getInstance().deleteOneDocumentFromCollection(id, "News");
+
+            log.info(" - " + operation_ID + " - **** newsEngine.class|deleteNews|Stop");
+        }
     }
 
     private void connectIfDisconnected(){

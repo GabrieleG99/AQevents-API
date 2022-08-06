@@ -88,6 +88,10 @@ public class MongoDBManager {
         getCollection(collectionName).updateOne(query, newValue.append("lastUpdated", new SimpleDateFormat("yyyy.MM.dd&HH:mm:ss").format(new Date())));
     }
 
+    public void updateOneDocumentInACollectionWithID(String id, Document newValue, String collection){
+        getCollection(collection).updateOne(eq("_id", new ObjectId(id)), new Document("$set", newValue.append("lastUpdated", new SimpleDateFormat("yyyy.MM.dd&HH:mm:ss").format(new Date()))));
+    }
+
     public void updateManyDocumentsInACollection(Document query, Document document, String collectionName) {
         getCollection(collectionName).updateMany(query, document);
     }
