@@ -9,6 +9,11 @@ import javax.ws.rs.core.*;
 @Path("/newsService")
 public class newsService {
 
+    final String OK = "200";
+    final String NOT_FOUND = "404";
+
+    final String SUCCESS = "Success";
+    final String NOTFOUND = "Not Found";
     @POST
     @Path("createNews")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -18,13 +23,10 @@ public class newsService {
         newsEngine engine = new newsEngine();
         NewsResponse response = new NewsResponse();
 
-        engine.createNews(news);
+        boolean result = engine.createNews(news);
 
-        response.setTitle(news.getTitle());
-        response.setResult("Success");
-        response.setCode("200");
+        return getResponse(news, response, result);
 
-        return Response.status(200).entity(response).build();
     }
 
     @GET
@@ -37,11 +39,18 @@ public class newsService {
 
         NewsModel result = engine.readNews(id);
 
-        response.setTitle(result.getTitle());
-        response.setResult("Success");
-        response.setCode("200");
+        if (result != null){
+            response.setTitle(result.getTitle());
+            response.setResult(SUCCESS);
+            response.setCode(OK);
+            return Response.status(Response.Status.OK).entity(response).build();
+        }
 
-        return Response.status(200).entity(response).build();
+        response.setTitle("No data detected");
+        response.setResult(NOTFOUND);
+        response.setCode(NOT_FOUND);
+
+        return Response.status(Response.Status.NOT_FOUND).entity(response).build();
     }
 
     @PUT
@@ -53,13 +62,25 @@ public class newsService {
         newsEngine engine = new newsEngine();
         NewsResponse response = new NewsResponse();
 
-        engine.updateNews(id, newValue);
+        boolean result = engine.updateNews(id, newValue);
+
+        return getResponse(newValue, response, result);
+    }
+
+    private Response getResponse(NewsModel newValue, NewsResponse response, boolean result) {
+        if (result){
+            response.setTitle(newValue.getTitle());
+            response.setResult(SUCCESS);
+            response.setCode(OK);
+
+            return Response.status(Response.Status.OK).entity(response).build();
+        }
 
         response.setTitle(newValue.getTitle());
-        response.setResult("Success");
-        response.setCode("200");
+        response.setResult(NOTFOUND);
+        response.setCode(NOT_FOUND);
 
-        return Response.status(200).entity(response).build();
+        return Response.status(Response.Status.NOT_FOUND).entity(response).build();
     }
 
     @DELETE
@@ -72,12 +93,8 @@ public class newsService {
 
         NewsModel deletedItem = engine.readNews(id);
 
-        engine.deleteNews(id);
+        boolean result = engine.deleteNews(id);
 
-        response.setTitle(deletedItem.getTitle());
-        response.setResult("Success");
-        response.setCode("200");
-
-        return Response.status(200).entity(response).build();
+        return getResponse(deletedItem, response, result);
     }
 }

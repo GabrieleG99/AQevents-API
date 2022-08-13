@@ -1,0 +1,7 @@
+it/gapif/aqeventsapi/classes/models/NewsModel.class
+it/gapif/aqeventsapi/DBManager/MongoDBManager.class
+it/gapif/aqeventsapi/responses/NewsResponse.class
+it/gapif/aqeventsapi/utils/CollectionNames.class
+it/gapif/aqeventsapi/classes/utils/ModelUtils.class
+it/gapif/aqeventsapi/RestServices/news/newsEngine.class
+it/gapif/aqeventsapi/RestServices/news/newsService.class

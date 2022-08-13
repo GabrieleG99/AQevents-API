@@ -1,0 +1,7 @@
+/Users/gabrielegiusti/Documents/GitHub/AQevents-API/src/main/java/it/gapif/aqeventsapi/utils/CollectionNames.java
+/Users/gabrielegiusti/Documents/GitHub/AQevents-API/src/main/java/it/gapif/aqeventsapi/classes/utils/ModelUtils.java
+/Users/gabrielegiusti/Documents/GitHub/AQevents-API/src/main/java/it/gapif/aqeventsapi/classes/models/NewsModel.java
+/Users/gabrielegiusti/Documents/GitHub/AQevents-API/src/main/java/it/gapif/aqeventsapi/DBManager/MongoDBManager.java
+/Users/gabrielegiusti/Documents/GitHub/AQevents-API/src/main/java/it/gapif/aqeventsapi/RestServices/news/newsEngine.java
+/Users/gabrielegiusti/Documents/GitHub/AQevents-API/src/main/java/it/gapif/aqeventsapi/responses/NewsResponse.java
+/Users/gabrielegiusti/Documents/GitHub/AQevents-API/src/main/java/it/gapif/aqeventsapi/RestServices/news/newsService.java

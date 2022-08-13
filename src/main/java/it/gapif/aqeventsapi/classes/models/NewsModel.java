@@ -1,7 +1,12 @@
 package it.gapif.aqeventsapi.classes.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import it.gapif.aqeventsapi.utils.CollectionNames;
 import org.bson.Document;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,4 +68,7 @@ public class NewsModel {
     public Document toDocument(){
         return new Document(toHasMap());
     }
+
+    public static String toCollectionName(){ return CollectionNames.News.toString(); }
+
 }

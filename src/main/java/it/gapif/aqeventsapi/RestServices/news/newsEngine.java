@@ -2,17 +2,13 @@ package it.gapif.aqeventsapi.RestServices.news;
 
 import it.gapif.aqeventsapi.DBManager.MongoDBManager;
 import it.gapif.aqeventsapi.classes.models.NewsModel;
-import lombok.extern.log4j.Log4j2;
+import it.gapif.aqeventsapi.utils.CollectionNames;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.mongodb.client.model.Filters.eq;
 
 public class newsEngine {
 
@@ -26,7 +22,7 @@ public class newsEngine {
         this.operation_ID = operation_ID;
     }
 
-    public void createNews(NewsModel news){
+    public boolean createNews(NewsModel news){
 
         log.info(" - " + operation_ID + " - **** newsEngine.class|createNews|Start");
 
@@ -34,13 +30,17 @@ public class newsEngine {
 
         Document newsDocument = news.toDocument();
 
-        if (MongoDBManager.getInstance().getOneDocumentFromCollection(newsDocument, "News") == null){
-            MongoDBManager.getInstance().addOneDocumentToCollection(newsDocument, "News");
-        } else {
-            System.out.println("Il documento è già presente all'interno del database");
+        if (MongoDBManager.getInstance().getOneDocumentFromCollection(newsDocument, CollectionNames.News.toString()) == null){
+            MongoDBManager.getInstance().addOneDocumentToCollection(newsDocument, CollectionNames.News.toString());
+            log.info(" - " + operation_ID + " - **** newsEngine.class|createNews|Stop");
+            return true;
         }
 
+        System.out.println("Il documento è già presente all'interno del database");
+
         log.info(" - " + operation_ID + " - **** newsEngine.class|createNews|Stop");
+
+        return false;
     }
 
     public void createMultipleNews(List<NewsModel> newsModels){
@@ -55,7 +55,7 @@ public class newsEngine {
             documents.add(newsModel.toDocument());
         }
 
-        MongoDBManager.getInstance().addManyDocumentsToCollection(documents, "News");
+        MongoDBManager.getInstance().addManyDocumentsToCollection(documents, CollectionNames.News.toString());
     }
 
     public NewsModel readNews(String id){
@@ -67,9 +67,9 @@ public class newsEngine {
 
         NewsModel __result = new NewsModel();
 
-        if (MongoDBManager.getInstance().getOneDocumentFromCollectionWithID(id, "News") != null){
+        if (MongoDBManager.getInstance().getOneDocumentFromCollectionWithID(id, CollectionNames.News.toString()) != null){
 
-            result = MongoDBManager.getInstance().getOneDocumentFromCollectionWithID(id, "News");
+            result = MongoDBManager.getInstance().getOneDocumentFromCollectionWithID(id, CollectionNames.News.toString());
 
             __result.setTitle(result.getString("title"));
             __result.setImage(result.getString("image"));
@@ -85,31 +85,42 @@ public class newsEngine {
         return null;
     }
 
-    public void updateNews(String id, NewsModel news){
+    public boolean updateNews(String id, NewsModel news){
         log.info(" - " + operation_ID + " - **** newsEngine.class|updateNews|Start");
 
         connectIfDisconnected();
 
         Document newsDocument = news.toDocument();
 
-        if (MongoDBManager.getInstance().getOneDocumentFromCollectionWithID(id, "News") != null) {
-            MongoDBManager.getInstance().updateOneDocumentInACollectionWithID(id, newsDocument, "News");
-        } else {
-            System.out.println("Non è possibile eseguire l'update perché l'elemento non è presente all'interno del database");
+        if (MongoDBManager.getInstance().getOneDocumentFromCollectionWithID(id, CollectionNames.News.toString()) != null) {
+            MongoDBManager.getInstance().updateOneDocumentInACollectionWithID(id, newsDocument, CollectionNames.News.toString());
             log.info(" - " + operation_ID + " - **** newsEngine.class|updateNews|Stop");
+            return true;
         }
+
+        System.out.println("Non è possibile eseguire l'update perché l'elemento non è presente all'interno del database");
+
+        log.info(" - " + operation_ID + " - **** newsEngine.class|updateNews|Stop");
+
+        return false;
     }
 
-    public void deleteNews(String id){
+    public boolean deleteNews(String id){
         log.info(" - " + operation_ID + " - **** newsEngine.class|deleteNews|Start");
 
         connectIfDisconnected();
 
-        if (MongoDBManager.getInstance().getOneDocumentFromCollectionWithID(id, "News") != null){
-            MongoDBManager.getInstance().deleteOneDocumentFromCollection(id, "News");
-
+        if (MongoDBManager.getInstance().getOneDocumentFromCollectionWithID(id, CollectionNames.News.toString()) != null){
+            MongoDBManager.getInstance().deleteOneDocumentFromCollection(id, CollectionNames.News.toString());
             log.info(" - " + operation_ID + " - **** newsEngine.class|deleteNews|Stop");
+            return true;
         }
+
+        System.out.println("Il documento no è presente all'interno del database");
+
+        log.info(" - " + operation_ID + " - **** newsEngine.class|deleteNews|Stop");
+
+        return false;
     }
 
     private void connectIfDisconnected(){
